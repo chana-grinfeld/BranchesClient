@@ -1,69 +1,65 @@
-<div style="direction: rtl;">
-    <div style="margin: 2rem 10% 1rem;">
-        <ng-container matColumnDef="store_id">
-            <mat-form-field>
-                <mat-label>אזור</mat-label>
-                <input type="text" matInput formControlName="store_region" [matAutocomplete]="auto"
-                    (input)="onChangeRegion($event.target)">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let store_region of storeRegionList" [value]="store_region">
-                        {{ store_region }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </ng-container>
+<form [formGroup]="formBranches">
+    <div style="direction: rtl;">
+        <div class="formBranches" style="margin: 2rem 10% 1rem;">
+            <ng-container matColumnDef="store_id">
+                <mat-form-field class="input">
+                    <mat-label>אזור</mat-label>
+                    <mat-select formControlName="store_region" (selectionChange)="onChangeRegion($event)">
+                        <mat-option *ngFor="let store_region of storeRegionList" [value]="store_region">
+                            {{store_region}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
+            <ng-container matColumnDef="store_id">
+                <mat-form-field class="input">
+                    <mat-label>כתובת</mat-label>
+                    <mat-select formControlName="store_address" (selectionChange)="onChangeAddress($event)">
+                        <mat-option *ngFor="let store_address of storeAddressList" [value]="store_address">
+                            {{store_address}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </ng-container>
 
-        <ng-container matColumnDef="store_address">
-            <mat-form-field>
-                <mat-label>כתובת</mat-label>
-                <input type="text" matInput formControlName="store_address" [matAutocomplete]="autoAddress"
-                    (input)="onChangeAddress($event.target)">
-                <mat-autocomplete #autoAddress="matAutocomplete">
-                    <mat-option *ngFor="let store_address of storeAddressList" [value]="store_address">
-                        {{ store_address }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </ng-container>
-
-
-        <ng-container matColumnDef="store_title">
-            <mat-form-field>
-                <mat-label>שם</mat-label>
-                <input type="text" matInput formControlName="store_title" [matAutocomplete]="autoName"
-                    (input)="onChangeName($event.target)">
-                <mat-autocomplete #autoName="matAutocomplete">
-                    <mat-option *ngFor="let store_title of storeNamesList" [value]="store_title">
-                        {{ store_title }}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-        </ng-container>
-    </div>
-
-    <div style="width: 80%; margin: 0 10%;">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
             <ng-container matColumnDef="store_title">
-                <th mat-header-cell *matHeaderCellDef> שם סניף</th>
-                <td mat-cell *matCellDef="let element"> {{element.store_title}} </td>
+                <mat-form-field class="input">
+                    <mat-label>שם</mat-label>
+                    <input type="text" matInput formControlName="store_title" [matAutocomplete]="autoName"
+                        (input)="onChangeName($event.target)">
+                    <mat-autocomplete #autoName="matAutocomplete">
+                        <mat-option *ngFor="let store_title of storeNamesList" [value]="store_title">
+                            {{ store_title }}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
             </ng-container>
+        </div>
 
-            <ng-container matColumnDef="store_region">
-                <th mat-header-cell *matHeaderCellDef>אזור</th>
-                <td mat-cell *matCellDef="let element"> {{element.store_region}} </td>
-            </ng-container>
+        <div style="width: 80%; margin: 0 10%;">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="store_title">
+                    <th mat-header-cell *matHeaderCellDef> שם סניף</th>
+                    <td mat-cell *matCellDef="let element"> {{element.store_title}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="city">
-                <th mat-header-cell *matHeaderCellDef> עיר</th>
-                <td mat-cell *matCellDef="let element"> {{element.city}} </td>
-            </ng-container>
+                <ng-container matColumnDef="store_region">
+                    <th mat-header-cell *matHeaderCellDef>אזור</th>
+                    <td mat-cell *matCellDef="let element"> {{element.store_region}} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="store_address">
-                <th mat-header-cell *matHeaderCellDef> כתובת</th>
-                <td mat-cell *matCellDef="let element"> {{element.store_address}} </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+                <ng-container matColumnDef="city">
+                    <th mat-header-cell *matHeaderCellDef> עיר</th>
+                    <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="store_address">
+                    <th mat-header-cell *matHeaderCellDef> כתובת</th>
+                    <td mat-cell *matCellDef="let element"> {{element.store_address}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
     </div>
-</div>
+</form>

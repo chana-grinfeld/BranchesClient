@@ -2,3 +2,11 @@ td,
 th {
     text-align: right;
 }
+
+.input {
+    margin: 5px;
+}
+
+.formBranches {
+    text-align: center;
+}

@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Branch } from '../../models/branch.model';
 import { BranchesService } from '../../services/branches.service';
-import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-branches-details',
@@ -13,8 +10,9 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./branches-details.component.css']
 })
 export class BranchesDetailsComponent implements OnInit {
+  formBranches!: FormGroup;
 
-  constructor(private branchesService: BranchesService, private router: Router) { }
+  constructor(private branchesService: BranchesService, private router: Router, private formBuilder: FormBuilder) { }
 
   displayedColumns: string[] = ['store_title', 'store_region', 'city', 'store_address'];
   dataSource: any;
@@ -25,55 +23,48 @@ export class BranchesDetailsComponent implements OnInit {
   storeNamesList: string[] = [];
 
   ngOnInit(): void {
+    this.formBranches = this.formBuilder.group({
+      store_region: [''],
+      store_address: [''],
+      store_title: ['']
+    });
+
     this.branchesService.getAllBranches().subscribe(data => {
       this.dataSource = data;
       this.branchesList = data;
       data.forEach(x => {
         if (!(this.storeRegionList.find(x1 => x1 == Number(x.store_region))))
           this.storeRegionList.push(Number(x.store_region));
-        //שיציג כתובות לפי האזור שפולטר וגם שיתן להקליד
         this.storeAddressList.push(x.store_address);
-        //שיפלטר גם בלחיצה על שורה בתיבה נפתחת
-        // this.storeNamesList.push(x.store_title);
       });
-
-      this.dataSource.sort((a: { store_title: string; }, b: { store_title: any; }) => a.store_title.localeCompare(b.store_title));
-      //Sort the dropdown by numbers in ascending order
       this.storeRegionList = this.storeRegionList.sort((a, b) => a - b);
-      //Sort the dropdown Addresses
-      this.storeAddressList = this.storeAddressList;
+      this.storeAddressList = this.storeAddressList.sort();
 
     }, (error) => {
       alert('היתה בעיה בשליפת הנתונים');
     });
   }
-  //Filter by typing
-  onChangeRegion(selectedChange: any) {
-    debugger
-    const inputValue = selectedChange.value.toLowerCase();
-    if (inputValue) {
-      this.dataSource = this.branchesList.filter(x => {
-        const storeRegion = String(x.store_region).toLowerCase();
-        return storeRegion === inputValue || storeRegion.startsWith(`${inputValue} `);
+
+  public onChangeRegion(selectedChange: any) {
+    const selectedRegion = Number(selectedChange.value);
+    this.storeAddressList = [];
+    this.dataSource = this.branchesList.filter(x => Number(x.store_region) === selectedRegion)
+      .map((x) => {
+        this.storeAddressList.push(x.store_address);
+        return x;
       });
-    } else {
-      this.dataSource = this.branchesList;
-    }
-  }
-  
-  public onChangeAddress(selectedChange: any) {
-    const inputValue = selectedChange.value.toLowerCase();
-    if (inputValue) {
-      this.dataSource = this.branchesList.filter(x => {
-        const storeAddress = x.store_address.toLowerCase();
-        return storeAddress.startsWith(inputValue);
-      });
-    } else {
-      this.dataSource = this.branchesList;
-    }
   }
 
+  public onChangeAddress(selectedChange: any) {
+    this.dataSource = this.branchesList.filter(x => x.store_address == selectedChange.value);
+  }
+
+  //Filter by typing
   public onChangeName(selectedChange: any) {
+    //Reset filters
+    this.formBranches.get("store_region")?.setValue("");
+    this.formBranches.get("store_address")?.setValue("");
+
     const inputValue = selectedChange.value.toLowerCase();
     if (inputValue) {
       this.dataSource = this.branchesList.filter(x => {
