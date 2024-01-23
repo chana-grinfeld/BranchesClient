@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://mcdonalds-live-engage-api-stage-1.azurewebsites.net",
+    "secure": false
+  }
+}
